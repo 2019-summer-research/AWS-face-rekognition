@@ -3,7 +3,7 @@
 
 ##  Setup
 
-**IMPORTANT!!!: You must install AWS CLI and configure your access keys to use the Rekognition API
+**IMPORTANT!!!: You must install AWS CLI and configure your access keys to use the Rekognition API**
 
 Within the repository there is both a comppiled JAR for use in the command line under /compiled and a InteliJ project of the uncompiled code.<br>
 
