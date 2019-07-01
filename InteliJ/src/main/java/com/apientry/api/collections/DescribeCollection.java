@@ -1,9 +1,9 @@
 package com.apientry.api.collections;
 
-import com.apientry.api.ClientFactory;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.model.DescribeCollectionRequest;
 import com.amazonaws.services.rekognition.model.DescribeCollectionResult;
+import com.apientry.api.faces.ClientFactory;
 
 public class DescribeCollection {
     public void run(String[] args) {

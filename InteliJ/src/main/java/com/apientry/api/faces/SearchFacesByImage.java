@@ -1,6 +1,5 @@
 package com.apientry.api.faces;
 
-import com.apientry.api.ClientFactory;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.model.*;
 
@@ -12,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class SearchFacesByImage {
+    Float confidence = 0.0f;
     public String run(String[] args) {
 
         if (args.length < 3) {
@@ -49,6 +49,7 @@ public class SearchFacesByImage {
                     "\nImage ID: " + face.getImageId() +
                     "\nExternal Image ID: " + face.getExternalImageId() +
                     "\nConfidence: " + face.getConfidence());
+            confidence = face.getConfidence();
             return face.getExternalImageId();
         }
 

@@ -1,6 +1,5 @@
 package com.apientry.api.faces;
 
-import com.apientry.api.ClientFactory;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.model.*;
 

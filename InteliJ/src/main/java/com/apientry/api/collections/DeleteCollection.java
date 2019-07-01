@@ -1,9 +1,9 @@
 package com.apientry.api.collections;
 
-import com.apientry.api.ClientFactory;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.model.DeleteCollectionRequest;
 import com.amazonaws.services.rekognition.model.DeleteCollectionResult;
+import com.apientry.api.faces.ClientFactory;
 
 public class DeleteCollection {
     public void run(String[] args) {

@@ -3,6 +3,7 @@ package com.apientry.api;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.model.*;
 import com.amazonaws.services.rekognition.model.Image;
+import com.apientry.api.faces.ClientFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -161,10 +162,10 @@ public class DetectFaces {
     }
 
 
-    private void drawBoundingBoxes(byte[] bytes, DetectFacesResult result) {
+    public BufferedImage drawBoundingBoxes(byte[] bytes, DetectFacesResult result) {
         int width;
         int height;
-        BufferedImage img;
+        BufferedImage img = null;
         Graphics2D graphics;
         try {
             img = ImageIO.read(new ByteArrayInputStream(bytes));
@@ -173,7 +174,7 @@ public class DetectFaces {
             graphics = img.createGraphics();
         } catch (IOException e) {
             System.err.println("Failed to read image: " + e.getLocalizedMessage());
-            return;
+            return img;
         }
         System.out.println("Image: width=" + width + ", height=" + height);
 
@@ -187,9 +188,11 @@ public class DetectFaces {
 
         try {
             ImageIO.write(img, "jpg", new File("img_bb.jpg"));
+            return img;
         } catch (IOException e) {
             System.err.println("Failed to write image: " + e.getLocalizedMessage());
         }
+        return img;
     }
 
     private void drawBoundingBox(FaceDetail faceDetail, String orientationCorrection, int width, int height,
