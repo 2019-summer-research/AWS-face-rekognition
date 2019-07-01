@@ -12,11 +12,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class SearchFacesByImage {
-    public void run(String[] args) {
+    public String run(String[] args) {
 
         if (args.length < 3) {
             System.err.println("Please provide a collection and images:  ");
-            return;
+            return "Collection Name and images missing";
         }
 
         String collectionId = args[1];
@@ -29,7 +29,7 @@ public class SearchFacesByImage {
             byteBuffer = ByteBuffer.wrap(bytes);
         } catch (IOException e) {
             System.err.println("Failed to read file '" + imageArg + "': " + e.getMessage());
-            return;
+            return "Failed to read";
         }
 
         SearchFacesByImageRequest request = new SearchFacesByImageRequest()
@@ -49,11 +49,14 @@ public class SearchFacesByImage {
                     "\nImage ID: " + face.getImageId() +
                     "\nExternal Image ID: " + face.getExternalImageId() +
                     "\nConfidence: " + face.getConfidence());
+            return face.getExternalImageId();
         }
 
         if(result.getFaceMatches().size() < 1)
         {
             System.out.println("No Matching Face Found");
+            return "No Face Match Found";
         }
+        return "No Face";
     }
 }
