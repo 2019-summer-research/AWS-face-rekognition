@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class SearchFacesByImage {
-    Float confidence = 0.0f;
+    public Float confidence = 0.0f;
     public String run(String[] args) {
 
         if (args.length < 3) {

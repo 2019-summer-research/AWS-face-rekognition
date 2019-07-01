@@ -18,11 +18,11 @@ import java.util.List;
 
 public class DetectFaces {
 
-    public void run(String[] args) {
-
+    public BufferedImage run(String[] args) {
+        BufferedImage bf = null;
         if (args.length < 2) {
             System.err.println("Please provide an image.");
-            return;
+            return null;
         }
 
         String imgPath = args[1];
@@ -31,7 +31,7 @@ public class DetectFaces {
             bytes = Files.readAllBytes(Paths.get(imgPath));
         } catch (IOException e) {
             System.err.println("Failed to load image: " + e.getMessage());
-            return;
+            return null;
         }
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
 
@@ -55,7 +55,8 @@ public class DetectFaces {
         }
 
 
-        drawBoundingBoxes(bytes,result);
+       bf = drawBoundingBoxes(bytes,result);
+        return bf;
     }
 
     private void printFaceDetails(FaceDetail faceDetail) {
