@@ -23,7 +23,7 @@ public class IndexFaces {
         String collectionId = args[1];
         for (int i = 2; i < args.length; i++) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
