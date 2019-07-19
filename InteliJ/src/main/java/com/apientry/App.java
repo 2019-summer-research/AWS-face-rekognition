@@ -1,6 +1,7 @@
 package com.apientry;
 
 import com.apientry.api.DetectFaces;
+import com.apientry.api.DetectVideoFaces;
 import com.apientry.api.collections.CreateCollection;
 import com.apientry.api.collections.DeleteCollection;
 import com.apientry.api.collections.DescribeCollection;
@@ -79,6 +80,14 @@ public class App {
             case "testimage":
                 TestImage(args[1]);
                 break;
+            case "vidid":
+                try {
+                    DetectVideoFaces dvf = new DetectVideoFaces();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
 
             default:
                 System.err.println("Unknown argument: " + args[0]);
