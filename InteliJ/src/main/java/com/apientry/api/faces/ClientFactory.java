@@ -20,7 +20,7 @@ public class ClientFactory {
                 .standard()
                 .withClientConfiguration(clientConfig)
                 .withCredentials(credentialsProvider)
-                .withRegion("eu-west-1")
+                .withRegion("us-east-2")
                 .build();
     }
 }

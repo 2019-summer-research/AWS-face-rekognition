@@ -82,7 +82,7 @@ public class App {
                 break;
             case "vidid":
                 try {
-                    DetectVideoFaces dvf = new DetectVideoFaces();
+                    DetectVideoFaces dvf = new DetectVideoFaces(args[1],args[2]);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

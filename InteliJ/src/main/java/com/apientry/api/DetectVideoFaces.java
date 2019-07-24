@@ -13,13 +13,12 @@ public class DetectVideoFaces {
 
 
 
-
     String bucket = "faceseast1";
     String video = "Test.MOV";
     String queueUrl =  "https://sqs.us-east-2.amazonaws.com/131136880645/RekogQue";
     String topicArn="arn:aws:sns:us-east-2:131136880645:AmazonRekognitionTopic";
     String roleArn="arn:aws:iam::131136880645:role/RekVid";
-
+    String CollectionID = "vidtestclass";
     private static AmazonSQS sqs = null;
     private static AmazonRekognition rek = null;
 
@@ -29,16 +28,34 @@ public class DetectVideoFaces {
 
 
     private static String startJobId = null;
+    private void StartFaceSearchCollection(String bucket, String video) throws Exception{
 
 
-    public DetectVideoFaces ()  throws Exception{
+        StartFaceSearchRequest req = new StartFaceSearchRequest()
+                .withCollectionId("vidtestclass")
+                .withVideo(new Video()
+                        .withS3Object(new S3Object()
+                                .withBucket(bucket)
+                                .withName(video)))
+                .withNotificationChannel(channel);
 
 
+
+        StartFaceSearchResult startPersonCollectionSearchResult = rek.startFaceSearch(req);
+        startJobId=startPersonCollectionSearchResult.getJobId();
+
+    }
+
+
+    public DetectVideoFaces (String collectionID,String Video)  throws Exception{
+        video = Video;
+        CollectionID = collectionID;
+        System.out.println("|"+CollectionID+"|");
         sqs = AmazonSQSClientBuilder.defaultClient();
         rek = AmazonRekognitionClientBuilder.defaultClient();
 
         //=================================================
-        StartLabels(bucket, video);
+        StartFaceSearchCollection(bucket, video);
         //=================================================
         System.out.println("Waiting for job: " + startJobId);
         //Poll queue for messages
@@ -50,9 +67,7 @@ public class DetectVideoFaces {
         do{
             messages = sqs.receiveMessage(queueUrl).getMessages();
             if (dotLine++<20){
-                System.out.print(".");
             }else{
-                System.out.println();
                 dotLine=0;
             }
 
@@ -77,7 +92,7 @@ public class DetectVideoFaces {
                         System.out.println("Status : " + operationStatus.toString());
                         if (operationStatus.asText().equals("SUCCEEDED")){
                             //============================================
-                            GetResultsLabels();
+                            GetResultsFaceSearchCollection();
                             //============================================
                         }
                         else{
@@ -180,6 +195,65 @@ public class DetectVideoFaces {
                 System.out.println();
             }
         } while (labelDetectionResult !=null && labelDetectionResult.getNextToken() != null);
+
+    }
+
+    private static void GetResultsFaceSearchCollection() throws Exception{
+        ResultsDataStorage DS = new ResultsDataStorage();
+        GetFaceSearchResult faceSearchResult=null;
+        int maxResults=10;
+        String paginationToken=null;
+
+        do {
+
+            if (faceSearchResult !=null){
+                paginationToken = faceSearchResult.getNextToken();
+            }
+
+
+            faceSearchResult  = rek.getFaceSearch(
+                    new GetFaceSearchRequest()
+                            .withJobId(startJobId)
+                            .withMaxResults(maxResults)
+                            .withNextToken(paginationToken)
+                            .withSortBy(FaceSearchSortBy.TIMESTAMP)
+            );
+
+
+            VideoMetadata videoMetaData=faceSearchResult.getVideoMetadata();
+
+
+
+
+            //Show search results
+            List<PersonMatch> matches=
+                    faceSearchResult.getPersons();
+
+            for (PersonMatch match: matches) {
+                long milliSeconds=match.getTimestamp();
+
+                List <FaceMatch> faceMatches = match.getFaceMatches();
+                if (faceMatches != null) {
+                    for (FaceMatch faceMatch: faceMatches){
+                        Face face=faceMatch.getFace();
+
+
+                        DS.Check(face.getExternalImageId(),milliSeconds,faceMatch.getSimilarity(),face.getBoundingBox());
+
+
+                    }
+                }
+            }
+
+
+        } while (faceSearchResult !=null && faceSearchResult.getNextToken() != null);
+
+
+        DS.print();
+
+
+
+
 
     }
 
